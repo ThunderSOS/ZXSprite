@@ -5,13 +5,11 @@ package org.happysoft.zxsprite;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JComponent;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 /**
@@ -20,12 +18,12 @@ import javax.swing.JScrollPane;
 public class ZXSpriteFrame extends JFrame {
 
   JMenu fileMenu = new JMenu("File");
-  JMenuItem animation_16_8 = new JMenuItem("New Sprite 8x8");
-  JMenuItem animation_16_16 = new JMenuItem("New Sprite 8x16");
-  JMenuItem animation_24_16 = new JMenuItem("New Sprite 16x16");
-  JMenuItem animation_16_8_p = new JMenuItem("New Sprite 8x8 - Pre-shifted(16x8)");
-  JMenuItem animation_16_16_p = new JMenuItem("New Sprite 8x16 - Pre-shifted(16x16)");
-  JMenuItem animation_24_16_p = new JMenuItem("New Sprite 16x16 - Pre-shifted(24x16)");
+  JMenuItem animation_8_8 = new JMenuItem("New Sprite 8x8");
+  JMenuItem animation_8_16 = new JMenuItem("New Sprite 8x16");
+  JMenuItem animation_16_16 = new JMenuItem("New Sprite 16x16");
+  JMenuItem animation_8_8_p = new JMenuItem("New Sprite 8x8 - Pre-shifted(16x8)");
+  JMenuItem animation_8_16_p = new JMenuItem("New Sprite 8x16 - Pre-shifted(16x16)");
+  JMenuItem animation_16_16_p = new JMenuItem("New Sprite 16x16 - Pre-shifted(24x16)");
   
   JMenuItem open = new JMenuItem("Open");
   JMenuItem save = new JMenuItem("Save");
@@ -42,6 +40,8 @@ public class ZXSpriteFrame extends JFrame {
   
   AnimationFrameTabPanel animationFrameTabPanel;
   
+  private ZeusDgDefaultFormat zeusDgFormat = new ZeusDgDefaultFormat();
+  
   private boolean[][] buffer = null;
 
   public ZXSpriteFrame(String title) {
@@ -55,9 +55,9 @@ public class ZXSpriteFrame extends JFrame {
     JMenuBar menuBar = new JMenuBar();
 
     JMenu newMenu = new JMenu("New");
-    newMenu.add(animation_16_8);
+    newMenu.add(animation_8_8);
+    newMenu.add(animation_8_16);
     newMenu.add(animation_16_16);
-    newMenu.add(animation_24_16);
     
     fileMenu.add(newMenu);
     
@@ -70,16 +70,16 @@ public class ZXSpriteFrame extends JFrame {
     editMenu.add(scrollRight);
     editMenu.add(reset);
     
-    animation_16_8.addActionListener((ActionEvent e) -> {
-      addAnimationTabPanel(16, 8, 4);
+    animation_8_8.addActionListener((ActionEvent e) -> {
+      addAnimationTabPanel(8, 8, 4);
+    });
+    
+    animation_8_16.addActionListener((ActionEvent e) -> {
+      addAnimationTabPanel(8, 16, 4);
     });
     
     animation_16_16.addActionListener((ActionEvent e) -> {
       addAnimationTabPanel(16, 16, 4);
-    });
-    
-    animation_24_16.addActionListener((ActionEvent e) -> {
-      addAnimationTabPanel(24, 16, 4);
     });   
         
     reset.addActionListener((ActionEvent e) -> {
@@ -105,6 +105,11 @@ public class ZXSpriteFrame extends JFrame {
     scrollLeft.addActionListener((ActionEvent e) -> {
       animationFrameTabPanel.getSelectedSpriteToggler().shiftLeft();    
       buffer = null;
+    });
+    
+    save.addActionListener((ActionEvent e) -> {
+      SpriteToggler st = animationFrameTabPanel.getSelectedSpriteToggler();
+      zeusDgFormat.export(st.getGridWidth(), st.getGridHeight(), st.getFilledSquares());
     });
     
     setPreferredSize(new Dimension(760, 500));

@@ -20,9 +20,6 @@ import javax.swing.JPanel;
  */
 public class SpriteToggler extends JPanel {
 
-  private int pWidth = 250;
-  private int pHeight = 200;
-  
   // offset from panel edges
   private final int xInset = 20;
   private final int yInset = 20;
@@ -32,19 +29,26 @@ public class SpriteToggler extends JPanel {
 
   private boolean[][] filledSquares = null; 
   
-  private int cellSize = 20;
+  private final int cellSize = 20;
   
   private final JComponent parent;
 
   public SpriteToggler(JComponent parent, int width, int height) {
     this.parent = parent;
+    
     this.gridSquaresWide = width;
     this.gridSquaresTall = height;
-    
-    this.pWidth = width*30;
-    this.pHeight = height*23;
+
     filledSquares = new boolean[gridSquaresWide][gridSquaresTall];
     jinit();
+  }
+  
+  public int getGridWidth() {
+    return gridSquaresWide;
+  }
+  
+  public int getGridHeight() {
+    return gridSquaresTall;
   }
   
   private void jinit() {

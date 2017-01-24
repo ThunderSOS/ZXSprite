@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 public class ZXSprite {
 
   public static void main(String[] args) {
-    System.out.println(ExportProperties.getOnCharacter());
     SwingUtilities.invokeLater(() -> {
       createAndShowGUI();
     });
