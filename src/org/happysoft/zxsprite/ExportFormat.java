@@ -9,6 +9,6 @@ package org.happysoft.zxsprite;
  */
 public interface ExportFormat {
   
-public String export(int width, int height, boolean[][] tile);
+  public String export(int width, int height, boolean[][] tile);
 
 }
