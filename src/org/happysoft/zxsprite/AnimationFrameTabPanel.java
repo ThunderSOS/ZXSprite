@@ -39,7 +39,7 @@ public class AnimationFrameTabPanel extends JTabbedPane {
       public void mouseClicked(MouseEvent e) {
         SpriteToggler s = getSelectedSpriteToggler();
         boolean dirty = s.isDirty();
-        parent.enableMenus(dirty);
+        parent.enableMenus(dirty, true);
       }
     });
     
@@ -48,7 +48,7 @@ public class AnimationFrameTabPanel extends JTabbedPane {
       public void stateChanged(ChangeEvent e) {        
         SpriteToggler s = getSelectedSpriteToggler();
         boolean dirty = s.isDirty();
-        parent.enableMenus(dirty);
+        parent.enableMenus(dirty, true);
       }
     });
   }

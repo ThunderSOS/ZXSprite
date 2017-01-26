@@ -145,7 +145,11 @@ public class SpriteToggler extends JPanel {
   }
   
   public void setFilledSquares(boolean[][] filledSquares) {
-    this.filledSquares = filledSquares;
+    for (int j = 0; j < gridSquaresTall; j++) {
+      for (int i = 0; i < gridSquaresWide; i++) {
+        this.filledSquares[i][j] = filledSquares[i][j];
+      }
+    }
     repaint();
   }
   

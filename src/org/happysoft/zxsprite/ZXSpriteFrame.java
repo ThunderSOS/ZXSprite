@@ -3,7 +3,6 @@
  */
 package org.happysoft.zxsprite;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -17,8 +16,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 
 /**
  * @author Chris Francis (c_francis1@yahoo.com)
@@ -29,7 +26,10 @@ public class ZXSpriteFrame extends JFrame {
 
   private JMenuItem open = new JMenuItem("Open");
   private JMenuItem save = new JMenuItem("Save");
-
+  
+  private JMenu export = new JMenu("Export");
+  private JMenuItem zeusExport = new JMenuItem("Zeus dg");
+  
   private JMenu editMenu = new JMenu("Edit");
 
   private JMenuItem copy = new JMenuItem("Copy");
@@ -56,17 +56,26 @@ public class ZXSpriteFrame extends JFrame {
   }
 
   private void jinit() {
+    enableMenus(false, false);
     frames.setSelectedItem(4);
     JPanel spriteOptionPanel = createOptionPanel();
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    createMenus(spriteOptionPanel);
+    setPreferredSize(new Dimension(760, 500));
+    scrollPane = new JScrollPane();
+    add(scrollPane);
+  }
 
+  private void createMenus(JPanel spriteOptionPanel) {
     JMenuBar menuBar = new JMenuBar();
     JMenuItem newMenu = new JMenuItem("New");
 
     fileMenu.add(newMenu);
-
     fileMenu.add(open);
     fileMenu.add(save);
+    fileMenu.add(export);
+    
+    export.add(zeusExport);
 
     editMenu.add(copy);
     editMenu.add(paste);
@@ -84,6 +93,8 @@ public class ZXSpriteFrame extends JFrame {
         Integer w = (Integer) width.getSelectedItem();
         Integer h = (Integer) height.getSelectedItem();
         Integer f = (Integer) frames.getSelectedItem();
+        enableMenus(false, false);
+        buffer = null;
         addAnimationTabPanel(w, h, f);
       }
     });
@@ -99,8 +110,8 @@ public class ZXSpriteFrame extends JFrame {
     paste.addActionListener((ActionEvent e) -> {
       if (buffer != null) {
         animationFrameTabPanel.getSelectedSpriteToggler().setFilledSquares(buffer);
+        enableMenus(true, true);
       }
-      buffer = null;
     });
 
     scrollRight.addActionListener((ActionEvent e) -> {
@@ -114,19 +125,17 @@ public class ZXSpriteFrame extends JFrame {
     });
 
     save.addActionListener((ActionEvent e) -> {
+    });
+    
+    zeusExport.addActionListener((ActionEvent e) -> {
       SpriteToggler st = animationFrameTabPanel.getSelectedSpriteToggler();
       zeusDgFormat.export(st.getGridWidth(), st.getGridHeight(), st.getFilledSquares());
     });
-
-    setPreferredSize(new Dimension(760, 500));
-
+    
     menuBar.add(fileMenu);
     menuBar.add(editMenu);
 
     setJMenuBar(menuBar);
-
-    scrollPane = new JScrollPane();
-    add(scrollPane);
   }
 
   private JPanel createOptionPanel() {
@@ -143,7 +152,7 @@ public class ZXSpriteFrame extends JFrame {
     return p;
   }
 
-  public void addAnimationTabPanel(int width, int height, int frames) {
+  private void addAnimationTabPanel(int width, int height, int frames) {
     animationFrameTabPanel = new AnimationFrameTabPanel(this, width, height, frames);
     Dimension d = animationFrameTabPanel.getPreferredSize();
     scrollPane.setViewportView(animationFrameTabPanel);
@@ -151,8 +160,10 @@ public class ZXSpriteFrame extends JFrame {
     repaint();
   }
 
-  public void enableMenus(boolean enabled) {
+  public void enableMenus(boolean enabled, boolean editEnabled) {
     copy.setEnabled(enabled);
+    export.setEnabled(enabled);
+    editMenu.setEnabled(editEnabled);
   }
 
 }
