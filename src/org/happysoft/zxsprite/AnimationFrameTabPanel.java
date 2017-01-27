@@ -43,6 +43,7 @@ public class AnimationFrameTabPanel extends JTabbedPane {
       }
     });
     
+    
     this.addChangeListener(new ChangeListener() {
       @Override
       public void stateChanged(ChangeEvent e) {        
@@ -58,11 +59,11 @@ public class AnimationFrameTabPanel extends JTabbedPane {
     return togglers.get(tgIndex);
   }
   
-  public boolean[][] getGrid() {
-    return getSelectedSpriteToggler().getFilledSquares();
+  public SpriteModel getSprite() {
+    return getSelectedSpriteToggler().getSprite();
   }
   
-  public void setGrid(boolean[][] filledSquares) {
-    getSelectedSpriteToggler().setFilledSquares(filledSquares);
+  public void setSprite(SpriteModel sprite) {
+    getSelectedSpriteToggler().setSprite(sprite);
   }
 }

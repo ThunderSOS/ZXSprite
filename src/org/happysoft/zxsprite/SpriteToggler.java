@@ -25,10 +25,7 @@ public class SpriteToggler extends JPanel {
   private final int xInset = 20;
   private final int yInset = 20;
   
-  private int gridSquaresTall = 8;
-  private int gridSquaresWide = 16;
-
-  private boolean[][] filledSquares = null; 
+  private SpriteModel sprite;
   
   private final int cellSize = 20;
   
@@ -36,20 +33,16 @@ public class SpriteToggler extends JPanel {
 
   public SpriteToggler(JComponent parent, int width, int height) {
     this.parent = parent;
-    
-    this.gridSquaresWide = width;
-    this.gridSquaresTall = height;
-
-    filledSquares = new boolean[gridSquaresWide][gridSquaresTall];
+    sprite = new SpriteModel(width, height);
     jinit();
   }
   
   public int getGridWidth() {
-    return gridSquaresWide;
+    return sprite.getWidth();
   }
   
   public int getGridHeight() {
-    return gridSquaresTall;
+    return sprite.getHeight();
   }
   
   private void jinit() {
@@ -63,8 +56,8 @@ public class SpriteToggler extends JPanel {
 
         int gridX = mx / cellSize;
         int gridY = my / cellSize;
-        if (gridX < gridSquaresWide && gridY < gridSquaresTall) {
-          filledSquares[gridX][gridY] = !filledSquares[gridX][gridY];
+        if (gridX < sprite.getWidth() && gridY < sprite.getHeight()) {
+          sprite.toggleBit(gridX, gridY);
         }
         repaint();
         parent.dispatchEvent(e);
@@ -80,96 +73,34 @@ public class SpriteToggler extends JPanel {
   @Override
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
-    int totalGridWidth = cellSize*gridSquaresWide; 
-    int totalGridHeight = cellSize*gridSquaresTall;
-
-    // grid bounding rectangle
-    g.drawRect(xInset, yInset, totalGridWidth, totalGridHeight);
-
-    // vertical grid lines 
-    for (int i = 0; i < gridSquaresWide; i++) {
-      g.drawLine(xInset + (cellSize * i), yInset, xInset + (cellSize * i), yInset + totalGridHeight);
-    }
-    // horizontal lines
-    for (int i = 0; i < gridSquaresTall ;i++) {
-      g.drawLine(xInset, yInset + (cellSize * i), xInset + totalGridWidth, yInset + (cellSize * i));
-    }
-    
-    // filled squares
-    for (int i = 0; i < gridSquaresWide; i++) {
-      for (int j = 0; j < gridSquaresTall; j++) {
-        if (filledSquares[i][j]) {
-          g.fillRect(xInset + (cellSize * i), yInset + (cellSize * j), cellSize, cellSize);
-        }
-      }
-    }
-    
-    // preview image
-    for (int i = 0; i < gridSquaresWide; i++) {
-      for (int j = 0; j < gridSquaresTall; j++) {
-        if (filledSquares[i][j]) {
-          g.fillRect(xInset + totalGridWidth + cellSize + i*2, yInset + j*2, 2, 2);
-        }
-      }
-    }
+    sprite.paint(g, cellSize, xInset, yInset);
   }
   
   public boolean isDirty() {
-    for (int i = 0; i < gridSquaresWide; i++) {
-      for (int j = 0; j < gridSquaresTall; j++) {
-        if (filledSquares[i][j]) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return sprite.isDirty();
   }
   
   public void clear() {
-    for (int i = 0; i < gridSquaresWide; i++) {
-      for (int j = 0; j < gridSquaresTall; j++) {
-        filledSquares[i][j] = false;
-      }
-    }
+    sprite.clear();
     repaint();
   }
   
-  public boolean[][] getFilledSquares() {
-    boolean[][] buffer = new boolean[gridSquaresWide][gridSquaresTall];
-    for (int j = 0; j < gridSquaresTall; j++) {
-      for (int i = 0; i < gridSquaresWide; i++) {
-        buffer[i][j] = filledSquares[i][j];
-      }
-    }
-    return buffer;
+  public SpriteModel getSprite() {
+    return sprite;
   }
   
-  public void setFilledSquares(boolean[][] filledSquares) {
-    for (int j = 0; j < gridSquaresTall; j++) {
-      for (int i = 0; i < gridSquaresWide; i++) {
-        this.filledSquares[i][j] = filledSquares[i][j];
-      }
-    }
+  public void setSprite(SpriteModel sprite) {
+    this.sprite = new SpriteModel(sprite);
     repaint();
   }
   
   public void shiftRight() {
-    for (int j = 0; j < gridSquaresTall; j++) {
-      for (int i = gridSquaresWide-1; i > 0; i--) {
-        filledSquares[i][j] = filledSquares[i-1][j];
-      }
-      filledSquares[0][j] = false;
-    }
+    sprite.shiftRight();
     repaint();
   }
   
   public void shiftLeft() {
-    for (int j = 0; j < gridSquaresTall; j++) {
-      for (int i = 1; i < gridSquaresWide; i++) {
-        filledSquares[i-1][j] = filledSquares[i][j];
-      }
-      filledSquares[gridSquaresWide-1][j] = false;
-    }
+    sprite.shiftLeft();
     repaint();
   }
 

@@ -48,7 +48,7 @@ public class ZXSpriteFrame extends JFrame {
 
   private ZeusDgDefaultFormat zeusDgFormat = new ZeusDgDefaultFormat();
 
-  private boolean[][] buffer = null;
+  private SpriteModel buffer = null;
 
   public ZXSpriteFrame(String title) {
     super(title);
@@ -104,12 +104,12 @@ public class ZXSpriteFrame extends JFrame {
     });
 
     copy.addActionListener((ActionEvent e) -> {
-      buffer = animationFrameTabPanel.getSelectedSpriteToggler().getFilledSquares();
+      buffer = animationFrameTabPanel.getSelectedSpriteToggler().getSprite();
     });
 
     paste.addActionListener((ActionEvent e) -> {
       if (buffer != null) {
-        animationFrameTabPanel.getSelectedSpriteToggler().setFilledSquares(buffer);
+        animationFrameTabPanel.getSelectedSpriteToggler().setSprite(buffer);
         enableMenus(true, true);
       }
     });
@@ -129,7 +129,7 @@ public class ZXSpriteFrame extends JFrame {
     
     zeusExport.addActionListener((ActionEvent e) -> {
       SpriteToggler st = animationFrameTabPanel.getSelectedSpriteToggler();
-      zeusDgFormat.export(st.getGridWidth(), st.getGridHeight(), st.getFilledSquares());
+      zeusDgFormat.export(st.getGridWidth(), st.getGridHeight(), st.getSprite().getSpriteData());
     });
     
     menuBar.add(fileMenu);
