@@ -6,7 +6,13 @@ package org.happysoft.zxsprite;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,31 +28,33 @@ import javax.swing.JScrollPane;
  */
 public class ZXSpriteFrame extends JFrame {
 
-  private JMenu fileMenu = new JMenu("File");
+  private final JMenu fileMenu = new JMenu("File");
 
-  private JMenuItem open = new JMenuItem("Open");
-  private JMenuItem save = new JMenuItem("Save");
-  
-  private JMenu export = new JMenu("Export");
-  private JMenuItem zeusExport = new JMenuItem("Zeus dg");
-  
-  private JMenu editMenu = new JMenu("Edit");
+  private final JMenuItem open = new JMenuItem("Open");
+  private final JMenuItem save = new JMenuItem("Save");
 
-  private JMenuItem copy = new JMenuItem("Copy");
-  private JMenuItem paste = new JMenuItem("Paste");
-  private JMenuItem scrollLeft = new JMenuItem("Shift Left");
-  private JMenuItem scrollRight = new JMenuItem("Shift Right");
-  private JMenuItem reset = new JMenuItem("Reset");
+  private final JMenu export = new JMenu("Export");
+  private final JMenuItem zeusExport = new JMenuItem("Zeus dg");
+
+  private final JMenu editMenu = new JMenu("Edit");
+
+  private final JMenuItem copy = new JMenuItem("Copy");
+  private final JMenuItem paste = new JMenuItem("Paste");
+  private final JMenuItem shiftLeft = new JMenuItem("Shift Left");
+  private final JMenuItem shiftRight = new JMenuItem("Shift Right");
+  private final JMenuItem reset = new JMenuItem("Reset");
 
   private JScrollPane scrollPane;
 
   private AnimationFrameTabPanel animationFrameTabPanel;
 
-  private JComboBox<Integer> width = new JComboBox(new Integer[]{8, 16, 24, 32});
-  private JComboBox<Integer> height = new JComboBox(new Integer[]{8, 16, 24, 32});
-  private JComboBox<Integer> frames = new JComboBox(new Integer[]{1, 2, 4, 8});
+  private final JComboBox<Integer> width = new JComboBox(new Integer[]{8, 16, 24, 32});
+  private final JComboBox<Integer> height = new JComboBox(new Integer[]{8, 16, 24, 32});
+  private final JComboBox<Integer> frames = new JComboBox(new Integer[]{1, 2, 4, 8});
 
-  private ZeusDgDefaultFormat zeusDgFormat = new ZeusDgDefaultFormat();
+  private final JFileChooser fc = new JFileChooser();
+
+  private final ZeusDgDefaultFormat zeusDgFormat = new ZeusDgDefaultFormat();
 
   private SpriteModel buffer = null;
 
@@ -58,29 +66,29 @@ public class ZXSpriteFrame extends JFrame {
   private void jinit() {
     enableMenus(false, false);
     frames.setSelectedItem(4);
-    JPanel spriteOptionPanel = createOptionPanel();
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    createMenus(spriteOptionPanel);
+    createMenus();
     setPreferredSize(new Dimension(760, 500));
     scrollPane = new JScrollPane();
     add(scrollPane);
   }
 
-  private void createMenus(JPanel spriteOptionPanel) {
+  private void createMenus() {
     JMenuBar menuBar = new JMenuBar();
     JMenuItem newMenu = new JMenuItem("New");
+    JPanel spriteOptionPanel = createOptionPanel();
 
     fileMenu.add(newMenu);
     fileMenu.add(open);
     fileMenu.add(save);
     fileMenu.add(export);
-    
+
     export.add(zeusExport);
 
     editMenu.add(copy);
     editMenu.add(paste);
-    editMenu.add(scrollLeft);
-    editMenu.add(scrollRight);
+    editMenu.add(shiftLeft);
+    editMenu.add(shiftRight);
     editMenu.add(reset);
 
     newMenu.addActionListener((ActionEvent e) -> {
@@ -114,24 +122,47 @@ public class ZXSpriteFrame extends JFrame {
       }
     });
 
-    scrollRight.addActionListener((ActionEvent e) -> {
+    shiftRight.addActionListener((ActionEvent e) -> {
       animationFrameTabPanel.getSelectedSpriteToggler().shiftRight();
       buffer = null;
     });
 
-    scrollLeft.addActionListener((ActionEvent e) -> {
+    shiftLeft.addActionListener((ActionEvent e) -> {
       animationFrameTabPanel.getSelectedSpriteToggler().shiftLeft();
       buffer = null;
     });
 
     save.addActionListener((ActionEvent e) -> {
+      int ret = fc.showSaveDialog(this);
+      if (ret == JFileChooser.APPROVE_OPTION) {
+        FileFormat ff = new FileFormat(animationFrameTabPanel);
+        try {
+          ff.save(fc.getSelectedFile(), animationFrameTabPanel.getSprites());
+        } catch (IOException ex) {
+          Logger.getLogger(ZXSpriteFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
     });
-    
+
+    open.addActionListener((ActionEvent e) -> {
+      int ret = fc.showOpenDialog(this);
+      if (ret == JFileChooser.APPROVE_OPTION) {
+        FileFormat ff = new FileFormat(animationFrameTabPanel);
+        try {
+          ArrayList<SpriteModel> models = ff.load(fc.getSelectedFile());
+          addAnimationTabPanel(models);
+
+        } catch (ClassNotFoundException | IOException ex) {
+          Logger.getLogger(ZXSpriteFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
+    });
+
     zeusExport.addActionListener((ActionEvent e) -> {
       SpriteToggler st = animationFrameTabPanel.getSelectedSpriteToggler();
       zeusDgFormat.export(st.getGridWidth(), st.getGridHeight(), st.getSprite().getSpriteData());
     });
-    
+
     menuBar.add(fileMenu);
     menuBar.add(editMenu);
 
@@ -154,6 +185,14 @@ public class ZXSpriteFrame extends JFrame {
 
   private void addAnimationTabPanel(int width, int height, int frames) {
     animationFrameTabPanel = new AnimationFrameTabPanel(this, width, height, frames);
+    Dimension d = animationFrameTabPanel.getPreferredSize();
+    scrollPane.setViewportView(animationFrameTabPanel);
+    setSize(d);
+    repaint();
+  }
+
+  private void addAnimationTabPanel(ArrayList<SpriteModel> models) {
+    animationFrameTabPanel = new AnimationFrameTabPanel(this, models);
     Dimension d = animationFrameTabPanel.getPreferredSize();
     scrollPane.setViewportView(animationFrameTabPanel);
     setSize(d);
