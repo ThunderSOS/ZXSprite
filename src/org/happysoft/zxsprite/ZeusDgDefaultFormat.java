@@ -22,7 +22,10 @@ public class ZeusDgDefaultFormat implements ExportFormat {
   }
 
   @Override
-  public String export(int width, int height, boolean[][] tile) {
+  public String export(SpriteModel model) {
+		int height = model.getHeight();
+		int width = model.getWidth();
+		boolean[][] tiles = model.getSpriteData();
     char on = ExportProperties.getOnCharacter();
     char off = ExportProperties.getOffCharacter();
     boolean whitespace = ExportProperties.useSpaces();
@@ -32,7 +35,7 @@ public class ZeusDgDefaultFormat implements ExportFormat {
     for (int j = 0; j < height; j++) {
       sb.append("\ndg ");
       for (int i = 0; i < width; i++) {
-        sb.append(tile[i][j] ? on : off);
+        sb.append(tiles[i][j] ? on : off);
         if (whitespace) {
           sb.append(" ");
         }

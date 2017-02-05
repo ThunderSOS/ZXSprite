@@ -56,6 +56,7 @@ public class ZXSpriteFrame extends JFrame {
 
   private final ZeusDgDefaultFormat zeusDgFormat = new ZeusDgDefaultFormat();
 
+  // buffer used for copy and paste
   private SpriteModel buffer = null;
 
   public ZXSpriteFrame(String title) {
@@ -152,15 +153,19 @@ public class ZXSpriteFrame extends JFrame {
           ArrayList<SpriteModel> models = ff.load(fc.getSelectedFile());
           addAnimationTabPanel(models);
 
-        } catch (ClassNotFoundException | IOException ex) {
-          Logger.getLogger(ZXSpriteFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | ClassCastException ex) {
+					Logger.getLogger(ZXSpriteFrame.class.getName()).log(Level.WARNING, "Invalid sprite definition file", ex);
+					JOptionPane.showMessageDialog(this, "Invalid sprite definition file.");		
+					
+        } catch (ClassNotFoundException cnfe) {
+					Logger.getLogger(ZXSpriteFrame.class.getName()).log(Level.SEVERE, "Something very weird has happened!", cnfe);
         }
       }
     });
 
     zeusExport.addActionListener((ActionEvent e) -> {
       SpriteToggler st = animationFrameTabPanel.getSelectedSpriteToggler();
-      zeusDgFormat.export(st.getGridWidth(), st.getGridHeight(), st.getSprite().getSpriteData());
+      zeusDgFormat.export(st.getSprite());
     });
 
     menuBar.add(fileMenu);
