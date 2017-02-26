@@ -42,6 +42,7 @@ public class ZXSpriteFrame extends JFrame {
   private final JMenuItem paste = new JMenuItem("Paste");
   private final JMenuItem shiftLeft = new JMenuItem("Shift Left");
   private final JMenuItem shiftRight = new JMenuItem("Shift Right");
+  private final JMenuItem reverse = new JMenuItem("Reverse");
   private final JMenuItem reset = new JMenuItem("Reset");
 
   private JScrollPane scrollPane;
@@ -90,6 +91,7 @@ public class ZXSpriteFrame extends JFrame {
     editMenu.add(paste);
     editMenu.add(shiftLeft);
     editMenu.add(shiftRight);
+    editMenu.add(reverse);
     editMenu.add(reset);
 
     newMenu.addActionListener((ActionEvent e) -> {
@@ -132,6 +134,11 @@ public class ZXSpriteFrame extends JFrame {
       animationFrameTabPanel.getSelectedSpriteToggler().shiftLeft();
       buffer = null;
     });
+    
+    reverse.addActionListener((ActionEvent e) -> {
+      animationFrameTabPanel.getSelectedSpriteToggler().reverse();
+      buffer = null;
+    });
 
     save.addActionListener((ActionEvent e) -> {
       int ret = fc.showSaveDialog(this);
@@ -164,8 +171,7 @@ public class ZXSpriteFrame extends JFrame {
     });
 
     zeusExport.addActionListener((ActionEvent e) -> {
-      SpriteToggler st = animationFrameTabPanel.getSelectedSpriteToggler();
-      zeusDgFormat.export(st.getSprite());
+      zeusDgFormat.export(animationFrameTabPanel.getSprites());
     });
 
     menuBar.add(fileMenu);

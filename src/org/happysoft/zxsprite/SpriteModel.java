@@ -10,6 +10,8 @@ import java.io.Serializable;
  * @author Chris Francis (c_francis1@yahoo.com)
  */
 public class SpriteModel implements Serializable {
+  
+  private static final long serialVersionUID = -1008625353210632990L;
 
   private boolean[][] sprite;
 
@@ -93,6 +95,16 @@ public class SpriteModel implements Serializable {
         sprite[i][j] = sprite[i-1][j];
       }
       sprite[0][j] = false;
+    }
+  }
+  
+  public void reverse() {
+    for (int j = 0; j < height; j++) {
+      for (int i = 0; i < width/2; i++) {
+        boolean temp = sprite[i][j];
+        sprite[i][j] = sprite[width-i-1][j];
+        sprite[width-i-1][j] = temp;
+      }      
     }
   }
   

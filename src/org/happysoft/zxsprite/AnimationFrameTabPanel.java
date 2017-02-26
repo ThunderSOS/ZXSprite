@@ -29,6 +29,9 @@ public class AnimationFrameTabPanel extends JTabbedPane {
       togglers.add(spriteToggler);
       maxFrames--;
     }
+    SpriteToggler scratchBoard = new SpriteToggler(this, width, height);
+    addTab("Clipboard", scratchBoard);
+    togglers.add(scratchBoard);
     jinit();
   }
 
@@ -45,6 +48,9 @@ public class AnimationFrameTabPanel extends JTabbedPane {
       togglers.add(spriteToggler);
       maxFrames--;
     }
+    SpriteToggler scratchBoard = new SpriteToggler(this, width, height);
+    addTab("Clipboard", scratchBoard);
+    togglers.add(scratchBoard);
     jinit();
   }
 
@@ -83,7 +89,7 @@ public class AnimationFrameTabPanel extends JTabbedPane {
   
   public ArrayList<SpriteModel> getSprites() {
     ArrayList<SpriteModel> models = new ArrayList<>();
-    for(int i = 0; i < togglers.size(); i++) {
+    for(int i = 0; i < togglers.size()-1; i++) {
       models.add(togglers.get(i).getSprite());
     }
     return models;

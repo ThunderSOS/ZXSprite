@@ -103,5 +103,10 @@ public class SpriteToggler extends JPanel {
     sprite.shiftLeft();
     repaint();
   }
+  
+  public void reverse() {
+    sprite.reverse();
+    repaint();
+  }
 
 }
