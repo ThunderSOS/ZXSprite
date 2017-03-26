@@ -5,6 +5,7 @@ package org.happysoft.zxsprite;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -13,7 +14,7 @@ import javax.swing.event.ChangeListener;
 /**
  * @author Chris Francis (c_francis1@yahoo.com)
  */
-public class AnimationFrameTabPanel extends JTabbedPane {
+public class AnimationFrameTabPanel extends JTabbedPane implements MouseMotionListener {
 
   private final ZXSpriteFrame parent;
   private final int numFrames;
@@ -55,6 +56,8 @@ public class AnimationFrameTabPanel extends JTabbedPane {
   }
 
   private void jinit() {
+    addMouseMotionListener(this);
+    
     this.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -93,5 +96,16 @@ public class AnimationFrameTabPanel extends JTabbedPane {
       models.add(togglers.get(i).getSprite());
     }
     return models;
+  }
+
+  @Override
+  public void mouseDragged(MouseEvent e) {
+    SpriteToggler s = getSelectedSpriteToggler();
+    boolean dirty = s.isDirty();
+    parent.enableMenus(dirty, true);
+  }
+
+  @Override
+  public void mouseMoved(MouseEvent e) {
   }
 }

@@ -44,6 +44,14 @@ public class SpriteModel implements Serializable {
   public void toggleBit(int x, int y) {
     sprite[x][y] = !sprite[x][y];
   }
+  
+  public void setBit(int x, int y) {
+    sprite[x][y] = true;
+  }
+  
+  public void resetBit(int x, int y) {
+    sprite[x][y] = false;
+  }
 
   public boolean[][] getSpriteData() {
     return sprite;
@@ -95,6 +103,24 @@ public class SpriteModel implements Serializable {
         sprite[i][j] = sprite[i-1][j];
       }
       sprite[0][j] = false;
+    }
+  }
+  
+  public void shiftUp() {
+    for (int i = 0; i < width; i++) {
+      for (int j = 1; j < height; j++) {
+        sprite[i][j-1] = sprite[i][j];
+      }
+      sprite[i][height-1] = false;
+    }
+  }
+  
+  public void shiftDown() {
+    for (int i = 0; i < width; i++) {
+      for (int j = height-2; j >= 0; j--) {
+        sprite[i][j+1] = sprite[i][j];
+      }
+      sprite[i][0] = false;
     }
   }
   

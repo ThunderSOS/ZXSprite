@@ -46,7 +46,6 @@ public class ZeusDgDefaultFormat implements ExportFormat {
       } 
       sb.append("\n");
     }
-    System.out.println(sb.toString());
     return sb.toString();
   }
 

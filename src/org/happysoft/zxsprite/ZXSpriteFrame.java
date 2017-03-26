@@ -5,8 +5,10 @@ package org.happysoft.zxsprite;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -42,6 +44,8 @@ public class ZXSpriteFrame extends JFrame {
   private final JMenuItem paste = new JMenuItem("Paste");
   private final JMenuItem shiftLeft = new JMenuItem("Shift Left");
   private final JMenuItem shiftRight = new JMenuItem("Shift Right");
+  private final JMenuItem shiftUp = new JMenuItem("Shift Up");
+  private final JMenuItem shiftDown = new JMenuItem("Shift Down");
   private final JMenuItem reverse = new JMenuItem("Reverse");
   private final JMenuItem reset = new JMenuItem("Reset");
 
@@ -91,6 +95,8 @@ public class ZXSpriteFrame extends JFrame {
     editMenu.add(paste);
     editMenu.add(shiftLeft);
     editMenu.add(shiftRight);
+    editMenu.add(shiftUp);
+    editMenu.add(shiftDown);
     editMenu.add(reverse);
     editMenu.add(reset);
 
@@ -135,6 +141,16 @@ public class ZXSpriteFrame extends JFrame {
       buffer = null;
     });
     
+    shiftUp.addActionListener((ActionEvent e) -> {
+      animationFrameTabPanel.getSelectedSpriteToggler().shiftUp();
+      buffer = null;
+    });
+
+    shiftDown.addActionListener((ActionEvent e) -> {
+      animationFrameTabPanel.getSelectedSpriteToggler().shiftDown();
+      buffer = null;
+    });    
+    
     reverse.addActionListener((ActionEvent e) -> {
       animationFrameTabPanel.getSelectedSpriteToggler().reverse();
       buffer = null;
@@ -171,7 +187,11 @@ public class ZXSpriteFrame extends JFrame {
     });
 
     zeusExport.addActionListener((ActionEvent e) -> {
-      zeusDgFormat.export(animationFrameTabPanel.getSprites());
+      String export = zeusDgFormat.export(animationFrameTabPanel.getSprites());
+      StringSelection ss = new StringSelection(export);
+      Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+      clipboard.setContents(ss, null);
+      
     });
 
     menuBar.add(fileMenu);
