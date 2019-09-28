@@ -25,6 +25,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import org.happysoft.zxsprite.export.DefbFormat;
+import org.happysoft.zxsprite.export.ExportFormat;
 
 /**
  * @author Chris Francis (c_francis1@yahoo.com)
@@ -38,6 +40,7 @@ public class ZXSpriteFrame extends JFrame {
 
   private final JMenu export = new JMenu("Export");
   private final JMenuItem zeusExport = new JMenuItem("Zeus dg");
+  private final JMenuItem defbExport = new JMenuItem("Defb");
 
   private final JMenu editMenu = new JMenu("Edit");
 
@@ -60,7 +63,8 @@ public class ZXSpriteFrame extends JFrame {
 
   private final JFileChooser fc = new JFileChooser();
 
-  private final ZeusDgDefaultFormat zeusDgFormat = new ZeusDgDefaultFormat();
+  private final ExportFormat zeusDgFormat = new ZeusDgDefaultFormat();
+  private final ExportFormat defbFormat = new DefbFormat();
 
   // buffer used for copy and paste
   private SpriteModel buffer = null;
@@ -91,6 +95,7 @@ public class ZXSpriteFrame extends JFrame {
     fileMenu.add(export);
 
     export.add(zeusExport);
+    export.add(defbExport);
 
     editMenu.add(copy);
     editMenu.add(paste);
@@ -192,7 +197,13 @@ public class ZXSpriteFrame extends JFrame {
       StringSelection ss = new StringSelection(export);
       Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
       clipboard.setContents(ss, null);
-      
+    });
+    
+    defbExport.addActionListener((ActionEvent e) -> {
+      String export = defbFormat.export(animationFrameTabPanel.getSprites());
+      StringSelection ss = new StringSelection(export);
+      Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+      clipboard.setContents(ss, null);
     });
 
     menuBar.add(fileMenu);

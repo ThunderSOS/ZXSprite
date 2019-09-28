@@ -1,11 +1,9 @@
 /**
- * Copyright 2013. All rights reserved.
+ * Copyright 2018. All rights reserved.
  */
 package org.happysoft.zxsprite.export;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 import org.happysoft.zxsprite.SpriteModel;
 
 /**
@@ -25,10 +23,15 @@ public class DefbFormat implements ExportFormat {
       for (int j = 0; j < height; j++) {
         sb.append("\n\tdefb ");
         for (int i = 0; i < width; i+=8) {
-          
-          sb.append(tiles[i][j] ? "1" : "0");
+          for(int k = 0; k < 8; k++) {
+            sb.append(tiles[i+k][j] ? "1" : "0");
+          }
+          sb.append("b");
+          if(i+8 < width) {
+            sb.append(", ");
+          }
         }
-        sb.append("b,");
+        sb.append(";");
       } 
       sb.append("\n");
     }
