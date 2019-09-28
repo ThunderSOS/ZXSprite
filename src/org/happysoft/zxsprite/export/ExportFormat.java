@@ -1,9 +1,10 @@
 /**
  * Copyright 2013. All rights reserved. 
  */
-package org.happysoft.zxsprite;
+package org.happysoft.zxsprite.export;
 
 import java.util.List;
+import org.happysoft.zxsprite.SpriteModel;
 
 
 /**

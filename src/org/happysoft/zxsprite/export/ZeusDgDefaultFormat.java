@@ -1,11 +1,12 @@
 /**
  * Copyright 2013. All rights reserved.
  */
-package org.happysoft.zxsprite;
+package org.happysoft.zxsprite.export;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
+import org.happysoft.zxsprite.SpriteModel;
 
 /**
  * @author Chris Francis (c_francis1@yahoo.com)

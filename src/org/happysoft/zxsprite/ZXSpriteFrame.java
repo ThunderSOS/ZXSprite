@@ -3,6 +3,7 @@
  */
 package org.happysoft.zxsprite;
 
+import org.happysoft.zxsprite.export.ZeusDgDefaultFormat;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
